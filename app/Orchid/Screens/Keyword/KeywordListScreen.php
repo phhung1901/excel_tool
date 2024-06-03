@@ -53,7 +53,8 @@ class KeywordListScreen extends Screen
     {
         return [
             Layout::table('keywords', [
-                TD::make('id'),
+                TD::make('id')
+                    ->sort()->filter(),
                 TD::make('keyword')
                     ->render(function (Keyword $keyword) {
                         return "<span>$keyword->keyword</span>
@@ -83,34 +84,37 @@ class KeywordListScreen extends Screen
                         ";
                     }),
                 TD::make('status')
-                    ->render(function (Keyword $keyword){
-                        return match ($keyword->status){
+                    ->render(function (Keyword $keyword) {
+                        return match ($keyword->status) {
                             KeywordStatus::ORIGIN_KEYWORD => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#28a745" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
                                                                   <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
                                                                 </svg>',
                             KeywordStatus::DUPLICATE_KEYWORD => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#dc3545" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
                                                                   <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
                                                                 </svg>',
+                            KeywordStatus::SEARCH_SUCCESS => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#28a745" class="bi bi-google" viewBox="0 0 16 16">
+                                                                  <path d="M15.545 6.558a9.4 9.4 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.7 7.7 0 0 1 5.352 2.082l-2.284 2.284A4.35 4.35 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.304a4.8 4.8 0 0 0 0 3.063h.003c.635 1.893 2.405 3.301 4.492 3.301 1.078 0 2.004-.276 2.722-.764h-.003a3.7 3.7 0 0 0 1.599-2.431H8v-3.08z"/>
+                                                                </svg>',
                             default => '_',
                         };
                     }),
                 TD::make('intent')
-                    ->render(function (Keyword $keyword){
-                       $keyword_intent = $keyword->keyword_intent;
-                       if ($keyword_intent){
-                           if (count($keyword_intent['origin'])){
-                               return "<b>ORIGIN ID: {$keyword_intent['origin'][0]['id']}</b><br>
+                    ->render(function (Keyword $keyword) {
+                        $keyword_intent = $keyword->keyword_intent;
+                        if ($keyword_intent) {
+                            if (count($keyword_intent['origin'])) {
+                                return "<b>ORIGIN ID: {$keyword_intent['origin'][0]['id']}</b><br>
                                 <b>KW ORIGIN</b>: {$keyword_intent['origin'][0]['keyword']}";
-                           }else{
-                               $rs = "<b>KW DUPLICATE</b><br><ul>";
-                               foreach ($keyword_intent['duplicate'] as $duplicate){
-                                   $rs .= "<li>{$duplicate['keyword']}</li>";
-                               }
-                               return $rs."</ul>";
-                           }
-                       }else{
-                           return "_";
-                       }
+                            } else {
+                                $rs = "<b>KW DUPLICATE</b><br><ul>";
+                                foreach ($keyword_intent['duplicate'] as $duplicate) {
+                                    $rs .= "<li>{$duplicate['keyword']}</li>";
+                                }
+                                return $rs . "</ul>";
+                            }
+                        } else {
+                            return "_";
+                        }
                     }),
             ])
         ];

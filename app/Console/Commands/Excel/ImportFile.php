@@ -38,8 +38,15 @@ class ImportFile extends Command
 
         $file = File::find($this->option('file_id'));
         $file->status(FileStatus::DATA_IMPORTING);
-        Excel::import(new KeywordImport($file, $rows), $file->getPath());
+        $import = new KeywordImport($file, $rows);
+        Excel::import($import, $file->getPath());
         $file->status(FileStatus::DATA_IMPORTED);
+        $row_count = $import->getRowCount();
+        $file->meta = [
+            'row_count' => $row_count,
+            'keyword_imported' => Keyword::where('file_id', $file->id)->count(),
+        ];
+        $file->save();
         return self::SUCCESS;
     }
 }

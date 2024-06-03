@@ -10,10 +10,12 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Artisan;
+use romanzipp\QueueMonitor\Traits\IsMonitored;
 
 class KeywordPosJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use IsMonitored;
 
     protected File $file;
     /**

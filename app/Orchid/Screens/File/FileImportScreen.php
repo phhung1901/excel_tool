@@ -70,6 +70,9 @@ class FileImportScreen extends Screen
     {
         return [
             Layout::rows([
+                Input::make('country')
+                ->title('Country')
+                ->value('vn'),
                 Upload::make('file')
                     ->title('File')
                     ->storage('local'),
@@ -83,6 +86,15 @@ class FileImportScreen extends Screen
                                 'filter[file_id]' => $file->id,
                             ])->class('text-decoration-underline');
                     }),
+                TD::make('meta')
+                    ->render(function (File $file) {
+                        if ($file->meta){
+                            return "<b>".$file->meta['keyword_imported']."/".$file->meta['row_count']."</b> KW";
+                        }else{
+                            return "_";
+                        }
+                    }),
+                TD::make('country'),
                 TD::make('status')
                     ->render(function (File $file) {
                         return FileStatus::getKey($file->status);
@@ -92,7 +104,7 @@ class FileImportScreen extends Screen
                         return Button::make('Data Import')->icon('upload')
                                 ->method('data_import', [
                                     'file_id' => $file->id,
-                                ])->class('btn btn-primary my-1') .
+                                ])->class('btn btn-primary my-1')->canSee(!$file->status) .
                             Button::make('POS')->icon('file-word')
                                 ->method('pos', [
                                     'file_id' => $file->id,
@@ -119,7 +131,7 @@ class FileImportScreen extends Screen
         $file_ids = $request->get('file');
         foreach ($file_ids as $file_id) {
             $attachment = Attachment::find($file_id);
-            $file = File::data($attachment->original_name, suffix: $attachment->extension);
+            $file = File::data($attachment->original_name, suffix: $attachment->extension, country: $request->get('country'));
             $file->attachment()->sync([$attachment->id], false);
         }
 

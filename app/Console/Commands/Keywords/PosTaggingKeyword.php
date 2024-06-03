@@ -45,7 +45,7 @@ class PosTaggingKeyword extends Command
             $retry = 0;
             retry:
             try {
-                $pos = Keyword::genPOS($keyword->keyword);
+                $pos = Keyword::genPOS($keyword->keyword, $file->country);
                 $keyword->pos = $pos;
                 $keyword->save();
                 $this->warn("====>POS: $pos");

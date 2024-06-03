@@ -15,7 +15,7 @@ class File extends Model
     protected $table = 'files';
     protected $guarded = [];
     protected $casts = [
-
+        'meta' => 'array',
     ];
 
     public static function data(
@@ -25,6 +25,7 @@ class File extends Model
         string $source = null,
         string $campaign = null,
         string $field = null,
+        string $country = 'vn',
     )
     {
         $file = File::where('name', $file_name)->first();
@@ -47,6 +48,7 @@ class File extends Model
         if ($meta){
             $meta ?? $file->meta = $meta;
         }
+        $file->country = $country;
 
         $file->save();
         return $file;

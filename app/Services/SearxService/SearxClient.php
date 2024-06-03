@@ -121,12 +121,14 @@ class SearxClient
         $responses = Promise\Utils::settle($promises)->wait();
         $results = [];
         foreach ($responses as $id => $response) {
-            $response = Utils::jsonDecode($response['value']->getBody()->getContents(), true);
-            $natural_result = NaturalResults::from($response);
-            if ($natural_result->organic_results){
-                $results[$id] = $natural_result->organic_results->toArray();
-            }else{
-                $results[$id] = [];
+            if (array_key_exists('value', $response)){
+                $response = Utils::jsonDecode($response['value']->getBody()->getContents(), true);
+                $natural_result = NaturalResults::from($response);
+                if ($natural_result->organic_results){
+                    $results[$id] = $natural_result->organic_results->toArray();
+                }else{
+                    $results[$id] = [];
+                }
             }
         }
 

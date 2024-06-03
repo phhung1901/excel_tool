@@ -15,6 +15,7 @@
         "maatwebsite/excel": "3.1.48",
         "ongr/elasticsearch-dsl": "*",
         "orchid/platform": "^14.25",
+        "romanzipp/laravel-queue-monitor": "^5.2",
         "spatie/laravel-data": "^4.6"
     },
     "require-dev": {

@@ -20,6 +20,7 @@ class KeywordImport implements ToCollection, WithUpserts, WithHeadingRow
 
     protected File $file;
     protected $rows;
+    private $rows_count = 0;
     public function __construct(File $file, $rows)
     {
         $this->file = $file;
@@ -28,12 +29,14 @@ class KeywordImport implements ToCollection, WithUpserts, WithHeadingRow
 
     public function collection(Collection $collection)
     {
+        $this->rows_count = $collection->count();
         if ($collection->count() >= 10000) {
             throw new \Exception('Maximum 10k rows per import');
         }else{
             $count = $this->rows;
             foreach ($collection as $row) {
-                if ($row['keyword_difficulty'] == ""){
+                $row = $row->toArray();
+                if (!array_key_exists('keyword_difficulty', $row) || $row['keyword_difficulty'] == ""){
                     $row['keyword_difficulty'] = null;
                 }
                 if ($count >= 0) {
@@ -56,5 +59,10 @@ class KeywordImport implements ToCollection, WithUpserts, WithHeadingRow
     public function uniqueBy()
     {
         return 'keyword';
+    }
+
+    public function getRowCount(): int
+    {
+        return $this->rows_count;
     }
 }

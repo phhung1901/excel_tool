@@ -53,6 +53,12 @@ class PlatformProvider extends OrchidServiceProvider
                 ->route('platform.systems.roles')
                 ->permission('platform.systems.roles')
                 ->divider(),
+
+            Menu::make(__('Queue Monitor'))
+                ->icon('database')
+                ->href('/admin/jobs')
+                ->target('_blank')
+                ->title(__('Jobs')),
         ];
     }
 

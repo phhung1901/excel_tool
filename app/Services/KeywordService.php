@@ -15,10 +15,12 @@ class KeywordService
 
     }
 
-    public static function remove_stopwords(array $pos): string
+    public static function remove_stopwords(array $pos, $country = 'vn'): string
     {
-
-        $stopwords = config('stopwords');
+        $stopwords = match ($country){
+            'vn' => config('stopwords_vn'),
+            'es' => config('stopwords_es')
+        };
         $pos_str = "";
         foreach ($pos as $key => $val) {
             if (in_array($val, $stopwords)) {

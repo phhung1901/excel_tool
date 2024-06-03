@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Laravel\Scout\Searchable;
 use Orchid\Filters\Filterable;
+use Orchid\Filters\Types\Where;
 use Orchid\Filters\Types\WhereIn;
 use Orchid\Screen\AsSource;
 
@@ -28,6 +29,7 @@ class Keyword extends Model
     ];
 
     protected array $allowedFilters = [
+        'id' => Where::class,
         'file_id' => WhereIn::class,
     ];
 
@@ -63,10 +65,10 @@ class Keyword extends Model
         return $keyword;
     }
 
-    public static function genPOS(string $keyword)
+    public static function genPOS(string $keyword, $country)
     {
         $pos = (new TokenizerClient())->tokenize($keyword);
-        return KeywordService::remove_stopwords($pos);
+        return KeywordService::remove_stopwords($pos, $country);
     }
 
     public function file()
