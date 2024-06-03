@@ -19,7 +19,7 @@ class ImportFile extends Command
     protected $signature = 'file:import
     {--file_id= File id}
     {--disk=local}
-    {--rows=5000 : Number of rows to import}';
+    {--rows=10000 : Number of rows to import}';
 
     /**
      * The console command description.
