@@ -46,7 +46,7 @@ class PosTaggingKeyword extends Command
             $retry = 0;
             retry:
             try {
-                $keyword_stemmer = $this->stemmer($keyword->keyword);
+                $keyword_stemmer = $this->stemmer($keyword->keyword, $file->country);
                 $pos = Keyword::genPOS($keyword_stemmer, $file->country);
                 $keyword->pos = $pos;
                 $keyword->save();
@@ -63,9 +63,14 @@ class PosTaggingKeyword extends Command
         $file->status(FileStatus::POS_FINISHED);
     }
 
-    public function stemmer($keyword)
+    public function stemmer($keyword, $country)
     {
         $client = new Client();
+
+        $country_filter = match ($country) {
+            'es' => ['lowercase', 'spanish_stemmer'],
+            default => ['lowercase'],
+        };
 
         $response = $client->request('GET', 'http://localhost:9200/keywords_pos_index/_analyze', [
             'headers' => [
@@ -73,7 +78,7 @@ class PosTaggingKeyword extends Command
             ],
             'json' => [
                 'tokenizer' => 'standard',
-                'filter' => ['lowercase', 'spanish_stemmer'],
+                'filter' => $country_filter,
                 'text' => $keyword
             ],
         ]);

@@ -37,7 +37,7 @@ class SerpKeyword extends Command
         while ($keywords = Keyword::select('id', 'keyword')
             ->where('file_id', $this->option('file_id'))
             ->where('status', KeywordStatus::IMPORTED)
-            ->limit(25)->get()->toArray())
+            ->limit(50)->get()->toArray())
         {
             $search_client = new SearxClient();
             $search_results = $search_client->searchMultiple('google', $keywords);

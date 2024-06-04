@@ -40,8 +40,10 @@ class SettingSearch extends Command
                         'filter' => [
                             'spanish_stemmer' => [
                                 'type' => 'stemmer',
-                                'language' => 'light_spanish'
-                            ]
+                                'language' => 'spanish'
+                            ],
+                            'stemmer' => [
+                            ],
                         ],
                         'analyzer' => [
                             'rebuilt_spanish' => [
@@ -50,7 +52,7 @@ class SettingSearch extends Command
                                     'lowercase',
                                     'spanish_stemmer'
                                 ]
-                            ]
+                            ],
                         ]
                     ]
                 ]
