@@ -41,8 +41,6 @@ class KeywordService
             ->where('status', KeywordStatus::SEARCH_SUCCESS)
             ->get();
 
-        dd(array_column($keywords->toArray(), 'pos'));
-
         $keyword_intent = [
             'origin' => [],
             'duplicate' => [],
