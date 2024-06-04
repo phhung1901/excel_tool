@@ -2,21 +2,16 @@
 
 namespace App\Orchid\Screens\File;
 
-use App\Jobs\KeywordDataJob;
 use App\Jobs\KeywordImportJob;
 use App\Jobs\KeywordPosJob;
 use App\Jobs\KeywordSerpJob;
 use App\Models\Enum\FileStatus;
-use App\Models\Enum\FileType;
 use App\Models\File;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Storage;
 use Orchid\Attachment\Models\Attachment;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Fields\Input;
-use Orchid\Screen\Fields\TextArea;
 use Orchid\Screen\Fields\Upload;
 use Orchid\Screen\Screen;
 use Orchid\Screen\TD;
@@ -95,6 +90,15 @@ class FileImportScreen extends Screen
                         }
                     }),
                 TD::make('country'),
+                TD::make('serp', 'SERP Progress')
+                    ->render(function (File $file) {
+                        $keyword = $file->keywords->count();
+                        $serp = $file->keywords()->whereNotNull('search_results')->count();
+                        if (!$serp || !$keyword){
+                            return "_";
+                        }
+                        return "<progress value='$serp' max='$keyword'></progress><br>". round((($serp/$keyword)*100), 2) ."%";
+                    }),
                 TD::make('status')
                     ->render(function (File $file) {
                         return FileStatus::getKey($file->status);

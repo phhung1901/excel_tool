@@ -4,8 +4,6 @@ namespace App\Services;
 
 use App\Models\Enum\KeywordStatus;
 use App\Models\Keyword;
-use App\Services\SearxService\SearxClient;
-use Illuminate\Database\Eloquent\Collection;
 use ONGR\ElasticsearchDSL\Query\Specialized\MoreLikeThisQuery;
 
 class KeywordService
@@ -42,6 +40,8 @@ class KeywordService
         $keywords = Keyword::search($query)
             ->where('status', KeywordStatus::SEARCH_SUCCESS)
             ->get();
+
+        dd(array_column($keywords->toArray(), 'pos'));
 
         $keyword_intent = [
             'origin' => [],

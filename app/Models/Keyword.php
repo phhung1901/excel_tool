@@ -36,6 +36,7 @@ class Keyword extends Model
     protected array $allowedSorts = [
         'id',
         'keyword',
+        'pos',
     ];
 
     public static function data(

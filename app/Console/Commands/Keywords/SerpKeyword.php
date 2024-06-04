@@ -6,7 +6,6 @@ use App\Models\Enum\FileStatus;
 use App\Models\Enum\KeywordStatus;
 use App\Models\File;
 use App\Models\Keyword;
-use App\Services\KeywordService;
 use App\Services\SearxService\SearxClient;
 use Illuminate\Console\Command;
 
@@ -38,7 +37,7 @@ class SerpKeyword extends Command
         while ($keywords = Keyword::select('id', 'keyword')
             ->where('file_id', $this->option('file_id'))
             ->where('status', KeywordStatus::IMPORTED)
-            ->limit(40)->get()->toArray())
+            ->limit(25)->get()->toArray())
         {
             $search_client = new SearxClient();
             $search_results = $search_client->searchMultiple('google', $keywords);

@@ -3,9 +3,7 @@
 namespace App\Orchid\Screens\Keyword;
 
 use App\Models\Enum\KeywordStatus;
-use App\Models\File;
 use App\Models\Keyword;
-use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Screen;
 use Orchid\Screen\TD;
 use Orchid\Support\Facades\Layout;
@@ -20,7 +18,7 @@ class KeywordListScreen extends Screen
     public function query(): iterable
     {
         return [
-            'keywords' => Keyword::filters()->defaultSort('id')->paginate(100),
+            'keywords' => Keyword::with('file')->filters()->defaultSort('id')->paginate(100),
         ];
     }
 
@@ -57,15 +55,13 @@ class KeywordListScreen extends Screen
                     ->sort()->filter(),
                 TD::make('keyword')
                     ->render(function (Keyword $keyword) {
-                        return "<span>$keyword->keyword</span>
-                                <br><i>$keyword->slug</i>";
+                        $file = $keyword->file;
+                        return "<span><b>KW: </b>$keyword->keyword</span>
+                                <br><b>S: </b><i>$keyword->slug</i>
+                                <br><b>F: </b><i>$file->name</i>";
                     })->sort(),
-                TD::make('file_id')
-                    ->render(function (Keyword $keyword) {
-                        $file = File::find($keyword->file_id);
-                        return "$file->name";
-                    })->filter(),
-                TD::make('pos'),
+                TD::make('pos')
+                    ->sort(),
                 TD::make('raw')
                     ->render(function (Keyword $keyword) {
                         return "

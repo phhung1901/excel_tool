@@ -5,6 +5,7 @@ namespace App\Console\Commands\Keywords;
 use App\Models\Enum\FileStatus;
 use App\Models\File;
 use App\Models\Keyword;
+use GuzzleHttp\Client;
 use Illuminate\Console\Command;
 use Mockery\Exception;
 use ONGR\ElasticsearchDSL\Query\Specialized\MoreLikeThisQuery;
@@ -45,7 +46,8 @@ class PosTaggingKeyword extends Command
             $retry = 0;
             retry:
             try {
-                $pos = Keyword::genPOS($keyword->keyword, $file->country);
+                $keyword_stemmer = $this->stemmer($keyword->keyword);
+                $pos = Keyword::genPOS($keyword_stemmer, $file->country);
                 $keyword->pos = $pos;
                 $keyword->save();
                 $this->warn("====>POS: $pos");
@@ -59,5 +61,29 @@ class PosTaggingKeyword extends Command
             }
         }
         $file->status(FileStatus::POS_FINISHED);
+    }
+
+    public function stemmer($keyword)
+    {
+        $client = new Client();
+
+        $response = $client->request('GET', 'http://localhost:9200/keywords_pos_index/_analyze', [
+            'headers' => [
+                'Content-Type' => 'application/json',
+            ],
+            'json' => [
+                'tokenizer' => 'standard',
+                'filter' => ['lowercase', 'spanish_stemmer'],
+                'text' => $keyword
+            ],
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        $keyword = "";
+        foreach (array_column($data['tokens'], 'token') as $token){
+            $keyword .= $token." ";
+        }
+        return trim($keyword);
     }
 }

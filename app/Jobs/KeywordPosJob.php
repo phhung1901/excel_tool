@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Models\Enum\FileStatus;
 use App\Models\File;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
