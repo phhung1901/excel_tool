@@ -51,6 +51,7 @@ class SerpKeyword extends Command
                     $this->info($keyword->keyword." search successful !");
                 }
             }
+            sleep(15);
         }
         $file->status(FileStatus::SERP_FINISHED);
     }
