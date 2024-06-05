@@ -42,6 +42,10 @@ class SettingSearch extends Command
                                 'type' => 'stemmer',
                                 'language' => 'spanish'
                             ],
+                            'french_stemmer' => [
+                                'type' => 'stemmer',
+                                'language' => 'french'
+                            ],
                             'stemmer' => [
                             ],
                         ],
@@ -51,6 +55,13 @@ class SettingSearch extends Command
                                 'filter' => [
                                     'lowercase',
                                     'spanish_stemmer'
+                                ]
+                            ],
+                            'rebuilt_french' => [
+                                'tokenizer' => 'standard',
+                                'filter' => [
+                                    'lowercase',
+                                    'french_stemmer'
                                 ]
                             ],
                         ]

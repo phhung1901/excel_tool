@@ -8,16 +8,12 @@ use ONGR\ElasticsearchDSL\Query\Specialized\MoreLikeThisQuery;
 
 class KeywordService
 {
-    public static function POS()
-    {
-
-    }
-
     public static function remove_stopwords(array $pos, $country = 'vn'): string
     {
         $stopwords = match ($country){
             'vn' => config('stopwords_vn'),
-            'es' => config('stopwords_es')
+            'es' => config('stopwords_es'),
+            'fr' => config('stopwords_fr'),
         };
         $pos_str = "";
         foreach ($pos as $key => $val) {
@@ -36,10 +32,14 @@ class KeywordService
             [
                 'fields' => ['pos'],
                 'min_term_freq' => 1,
+                'min_doc_freq' => 1,
             ]);
         $keywords = Keyword::search($query)
             ->where('status', KeywordStatus::SEARCH_SUCCESS)
             ->get();
+
+//        dd(array_column($keywords->toArray(), 'keyword'));
+//        dd($keywords);
 
         $keyword_intent = [
             'origin' => [],
@@ -64,14 +64,14 @@ class KeywordService
                     list($keyword, $keyword_same) = array($keyword_same, $keyword);
                 }
                 $keyword_same->status = KeywordStatus::DUPLICATE_KEYWORD;
-                array_push($keyword_same_intent['origin'], [
+                $origin = array_push($keyword_same_intent['origin'], [
                     'id' => $keyword->id,
                     'keyword' => $keyword->keyword,
                 ]);
                 $keyword_same->keyword_intent = $keyword_same_intent;
                 $keyword_same->save();
                 $keyword->status = KeywordStatus::ORIGIN_KEYWORD;
-                array_push($keyword_intent['duplicate'], [
+                $duplicate = array_push($keyword_intent['duplicate'], [
                     'id' => $keyword_same->id,
                     'keyword' => $keyword_same->keyword,
                 ]);

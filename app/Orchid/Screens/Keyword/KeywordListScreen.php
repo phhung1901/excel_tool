@@ -56,7 +56,7 @@ class KeywordListScreen extends Screen
                 TD::make('keyword')
                     ->render(function (Keyword $keyword) {
                         $file = $keyword->file;
-                        return "<span><b>KW: </b>$keyword->keyword</span>
+                        return "<span><b>$keyword->keyword</b></span>
                                 <br><b>S: </b><i>$keyword->slug</i>
                                 <br><b>F: </b><i>$file->name</i>";
                     })->sort(),

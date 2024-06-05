@@ -69,6 +69,7 @@ class PosTaggingKeyword extends Command
 
         $country_filter = match ($country) {
             'es' => ['lowercase', 'spanish_stemmer'],
+            'fr' => ['lowercase', 'french_stemmer'],
             default => ['lowercase'],
         };
 

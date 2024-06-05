@@ -4,14 +4,10 @@ namespace App\Services\Excel\Import;
 use App\Models\Data\KeywordRawData;
 use App\Models\File;
 use App\Models\Keyword;
-use Illuminate\Console\OutputStyle;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\ToCollection;
-use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Concerns\WithProgressBar;
 use Maatwebsite\Excel\Concerns\WithUpserts;
 
 class KeywordImport implements ToCollection, WithUpserts, WithHeadingRow
@@ -39,7 +35,7 @@ class KeywordImport implements ToCollection, WithUpserts, WithHeadingRow
                 if (!array_key_exists('keyword_difficulty', $row) || $row['keyword_difficulty'] == ""){
                     $row['keyword_difficulty'] = null;
                 }
-                if ($count >= 0) {
+                if ($count >= 0 && $row['keyword']) {
                     $keyword = Keyword::data(
                         $row['keyword'],
                         $this->file,
