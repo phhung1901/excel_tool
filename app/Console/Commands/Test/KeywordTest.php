@@ -28,11 +28,13 @@ class KeywordTest extends Command
      */
     public function handle()
     {
-        while ($keyword = Keyword::where('status', KeywordStatus::ORIGIN_KEYWORD)
-                    ->orWhere('status', KeywordStatus::DUPLICATE_KEYWORD)
-                    ->where('file_id', $this->option('file_id'))
-                    ->first()
-        ) {
+        while ($keyword = Keyword::where('file_id', $this->option('file_id'))
+            ->where(function ($query) {
+                $query->where('status', KeywordStatus::ORIGIN_KEYWORD)
+                    ->orWhere('status', KeywordStatus::DUPLICATE_KEYWORD);
+            })
+            ->first()
+    ) {
             $this->info($keyword->keyword);
             $keyword->status = KeywordStatus::SEARCH_SUCCESS;
             $keyword->keyword_intent = null;
