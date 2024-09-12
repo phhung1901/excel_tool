@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "annexare/countries-list": "^3.1",
         "elasticsearch/elasticsearch": "^8.13",
         "google-gemini-php/client": "^1.0",
         "guzzlehttp/guzzle": "^7.8",
@@ -18,7 +19,8 @@
         "orchid/platform": "^14.25",
         "romanzipp/laravel-queue-monitor": "^5.2",
         "spatie/laravel-data": "^4.6",
-        "symfony/dom-crawler": "^7.1"
+        "symfony/dom-crawler": "^7.1",
+        "crwlr/crawler": "^1.7"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

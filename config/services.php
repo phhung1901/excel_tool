@@ -31,4 +31,13 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'ai' => [
+        'gemini' => [
+            'token' => env('AI_GEMINI_API'),
+        ],
+        'openai' => [
+            'token' => env('AI_CHATGPT_API'),
+        ],
+    ],
+
 ];

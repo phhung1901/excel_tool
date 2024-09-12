@@ -18,7 +18,7 @@ class ImportFile extends Command
      */
     protected $signature = 'file:import
     {--file_id= File id}
-    {--disk=local}
+    {--field=}
     {--rows=10000 : Number of rows to import}';
 
     /**
@@ -33,13 +33,26 @@ class ImportFile extends Command
      */
     public function handle()
     {
-        $disk = $this->option('disk');
+        $field = $this->option('field');
         $rows = $this->option('rows');
 
-        $file = File::find($this->option('file_id'));
+        if ($field){
+            $files = File::where('field', $field)->get();
+            foreach ($files as $file){
+                $this->import($file, $rows);
+            }
+        }else{
+            $file = File::find($this->option('file_id'));
+            $this->import($file, $rows);
+        }
+        return self::SUCCESS;
+    }
+
+    protected function import(File $file, $rows)
+    {
         $file->status(FileStatus::DATA_IMPORTING);
         $import = new KeywordImport($file, $rows);
-        Excel::import($import, $file->getPath());
+        Excel::import($import, $file->getPath(), 'public');
         $file->status(FileStatus::DATA_IMPORTED);
         $row_count = $import->getRowCount();
         $file->meta = [
@@ -47,6 +60,5 @@ class ImportFile extends Command
             'keyword_imported' => Keyword::where('file_id', $file->id)->count(),
         ];
         $file->save();
-        return self::SUCCESS;
     }
 }

@@ -13,14 +13,26 @@ return new class extends Migration
     {
         Schema::create('keywords', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('file_id')->index();
             $table->string('keyword');
-            $table->string('slug')->index();
-            $table->string('source')->index();
-            $table->string('field')->index();
-            $table->jsonb('raw')->nullable()->comment('KD, Volume, ...');
-            $table->jsonb('search_results')->nullable()->comment('top 10 SERP');
-            $table->string('pos')->nullable()->index()->comment('POS tagging string');
-            $table->tinyInteger('status')->default(0)->index();
+            $table->string('slug');
+            $table->jsonb('raw')->nullable();
+            $table->string('source')->nullable();
+            $table->string('field')->index()->nullable();
+            $table->tinyInteger('status')->index()->default(0);
+            $table->string('language')->index()->nullable();
+            $table->unsignedBigInteger('duplicated_with')->nullable();
+            $table->string('country',5)->nullable()->index();
+
+            $table->jsonb('keyword_intent')->nullable();
+            $table->string('pos')->nullable()->comment('POS tagging string')->index();
+
+            $table->smallInteger('task_search_status')->default(0)->index();
+            $table->timestamp('task_search_last')->nullable()->index();
+            $table->tinyInteger('task_filter')->default(0)->nullable()->index();
+
+            $table->smallInteger('task_pos_status')->default(0)->index();
+            $table->timestamp('task_pos_last')->nullable()->index();
             $table->timestamps();
         });
     }

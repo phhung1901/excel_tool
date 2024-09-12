@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('files', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('suffix')->default('xlsx');
-            $table->string('source')->default('ahref')->index();
-            $table->string('campaign')->nullable();
-            $table->string('field')->default('book')->index()->comment('book, app, ...');
+            $table->string('country');
+            $table->string('source')->nullable();
+            $table->string('field')->nullable();
             $table->jsonb('meta')->nullable();
             $table->tinyInteger('status')->default(0);
+            $table->string("language", 10)->nullable();
             $table->timestamps();
         });
     }
